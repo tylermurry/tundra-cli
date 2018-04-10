@@ -1,0 +1,38 @@
+{
+  "name": "tundra-cli",
+  "version": "1.0.0",
+  "description": "Tundra is a Javascript test data management utility to help streamline http data capture for end-to-end testing. The main goal is to help applications easily implement cold storage testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "bin": {
+    "tundra": "./dist/index.js"
+  },
+  "keywords": [
+    "tundra-cli",
+    "tundra",
+    "fetch",
+    "mock",
+    "interceptor",
+    "intercept"
+  ],
+  "author": "Tyler Murry",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "chalk": "^2.3.2",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.15.1",
+    "express": "^4.16.3",
+    "lodash": "^4.17.5",
+    "mkdirp": "^0.5.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "jest": "^22.4.3"
+  }
+}
