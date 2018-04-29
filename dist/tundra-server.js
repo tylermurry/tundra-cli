@@ -41,10 +41,12 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 var listenForRequests = exports.listenForRequests = function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(port, profile, fixturesDirectory) {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(port, profile, fixturesDirectory, resetProfile) {
         var server, requests;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
             while (1) {
@@ -79,16 +81,34 @@ var listenForRequests = exports.listenForRequests = function () {
                                 while (1) {
                                     switch (_context.prev = _context.next) {
                                         case 0:
+                                            if (resetProfile) {
+                                                _context.next = 9;
+                                                break;
+                                            }
+
+                                            _context.t0 = requests.push;
+                                            _context.t1 = requests;
+                                            _context.t2 = _toConsumableArray;
+                                            _context.next = 6;
+                                            return getExistingProfileRequests(profile, fixturesDirectory);
+
+                                        case 6:
+                                            _context.t3 = _context.sent;
+                                            _context.t4 = (0, _context.t2)(_context.t3);
+
+                                            _context.t0.apply.call(_context.t0, _context.t1, _context.t4);
+
+                                        case 9:
                                             sortedRequests = (0, _lodash2.default)(requests).chain().sortBy('request.method').sortBy('request.url').value();
-                                            _context.next = 3;
+                                            _context.next = 12;
                                             return saveRequestsAsProfile(sortedRequests, profile, fixturesDirectory);
 
-                                        case 3:
+                                        case 12:
 
                                             console.log(_chalk2.default.green('Profile successfully captured!'));
                                             process.exit();
 
-                                        case 5:
+                                        case 14:
                                         case 'end':
                                             return _context.stop();
                                     }
@@ -104,56 +124,89 @@ var listenForRequests = exports.listenForRequests = function () {
         }, _callee2, undefined);
     }));
 
-    return function listenForRequests(_x, _x2, _x3) {
+    return function listenForRequests(_x, _x2, _x3, _x4) {
         return _ref.apply(this, arguments);
     };
 }();
 
-var saveRequestsAsProfile = function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(requests, profile, fixturesDirectory) {
-        var profilesDirectory;
+var getExistingProfileRequests = function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(profile, fixturesDirectory) {
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
             while (1) {
                 switch (_context3.prev = _context3.next) {
+                    case 0:
+                        _context3.prev = 0;
+                        _context3.t0 = JSON;
+                        _context3.next = 4;
+                        return _fs2.default.readFileSync(process.cwd() + '/' + fixturesDirectory + '/profiles/' + profile + '.json', 'utf-8');
+
+                    case 4:
+                        _context3.t1 = _context3.sent;
+                        return _context3.abrupt('return', _context3.t0.parse.call(_context3.t0, _context3.t1));
+
+                    case 8:
+                        _context3.prev = 8;
+                        _context3.t2 = _context3['catch'](0);
+                        return _context3.abrupt('return', []);
+
+                    case 11:
+                    case 'end':
+                        return _context3.stop();
+                }
+            }
+        }, _callee3, undefined, [[0, 8]]);
+    }));
+
+    return function getExistingProfileRequests(_x5, _x6) {
+        return _ref3.apply(this, arguments);
+    };
+}();
+
+var saveRequestsAsProfile = function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(requests, profile, fixturesDirectory) {
+        var profilesDirectory;
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+            while (1) {
+                switch (_context4.prev = _context4.next) {
                     case 0:
                         profilesDirectory = process.cwd() + '/' + fixturesDirectory + '/profiles';
 
 
                         (0, _mkdirp2.default)(profilesDirectory);
-                        _context3.next = 4;
+                        _context4.next = 4;
                         return _fs2.default.writeFileSync(profilesDirectory + '/' + profile + '.json', JSON.stringify(requests, null, 2), 'utf8');
 
                     case 4:
                     case 'end':
-                        return _context3.stop();
+                        return _context4.stop();
                 }
             }
-        }, _callee3, this);
+        }, _callee4, this);
     }));
 
-    return function saveRequestsAsProfile(_x4, _x5, _x6) {
-        return _ref3.apply(this, arguments);
+    return function saveRequestsAsProfile(_x7, _x8, _x9) {
+        return _ref4.apply(this, arguments);
     };
 }();
 
 function waitForStopCommand(actionCallback) {
-    (0, _co2.default)( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+    (0, _co2.default)( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
             while (1) {
-                switch (_context4.prev = _context4.next) {
+                switch (_context5.prev = _context5.next) {
                     case 0:
-                        _context4.next = 2;
+                        _context5.next = 2;
                         return (0, _coPrompt2.default)('');
 
                     case 2:
-                        _context4.t0 = _context4.sent.toUpperCase().trim();
+                        _context5.t0 = _context5.sent.toUpperCase().trim();
 
-                        if (_context4.t0 === 'STOP') {
-                            _context4.next = 6;
+                        if (_context5.t0 === 'STOP') {
+                            _context5.next = 6;
                             break;
                         }
 
-                        _context4.next = 0;
+                        _context5.next = 0;
                         break;
 
                     case 6:
@@ -161,10 +214,10 @@ function waitForStopCommand(actionCallback) {
 
                     case 7:
                     case 'end':
-                        return _context4.stop();
+                        return _context5.stop();
                 }
             }
-        }, _callee4, this);
+        }, _callee5, this);
     }));
 }
 //# sourceMappingURL=tundra-server.js.map

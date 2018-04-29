@@ -8,7 +8,7 @@ import mkdirp from "mkdirp";
 import fs from 'fs';
 import _ from 'lodash';
 
-export const listenForRequests = async (port, profile, fixturesDirectory) => {
+export const listenForRequests = async (port, profile, fixturesDirectory, resetProfile) => {
     const server = express();
     server.use(bodyParser.json());
 
@@ -28,6 +28,10 @@ export const listenForRequests = async (port, profile, fixturesDirectory) => {
     server.listen(port, () => console.log(chalk.green(`Listening for requests on http://localhost:${port}/requests`)));
 
     await waitForStopCommand(async () => {
+
+        if (!resetProfile)
+            requests.push(...await getExistingProfileRequests(profile, fixturesDirectory));
+
         const sortedRequests = _(requests).chain()
             .sortBy('request.method')
             .sortBy('request.url')
@@ -38,6 +42,14 @@ export const listenForRequests = async (port, profile, fixturesDirectory) => {
         console.log(chalk.green('Profile successfully captured!'));
         process.exit()
     });
+};
+
+const getExistingProfileRequests = async(profile, fixturesDirectory) => {
+    try {
+        return JSON.parse(await fs.readFileSync(`${process.cwd()}/${fixturesDirectory}/profiles/${profile}.json`, 'utf-8'));
+    } catch (e) {
+        return [];
+    }
 };
 
 const saveRequestsAsProfile = async function(requests, profile, fixturesDirectory) {
