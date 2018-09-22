@@ -35,6 +35,10 @@ var _socket = require('./services/socket');
 
 var Socket = _interopRequireWildcard(_socket);
 
+var _opn = require('opn');
+
+var _opn2 = _interopRequireDefault(_opn);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -67,10 +71,10 @@ var start = exports.start = function () {
             server.get('/profiles', _profiles2.default);
 
             // Console
-            server.use('/console', _express2.default.static('console/build'));
+            server.use(_express2.default.static('console/build'));
 
             server.listen(port, function () {
-              return console.log(_chalk2.default.green('Tundra server started. Console available at http://localhost:' + port + '/console.'));
+              return console.log(_chalk2.default.green('Tundra server started. Console available at http://localhost:' + port + '.'));
             });
 
             // Websocket Server
@@ -85,7 +89,11 @@ var start = exports.start = function () {
 
             (0, _state.setState)({ port: port, socketPort: socketPort, fixturesDirectory: fixturesDirectory });
 
-          case 17:
+            // Launch Console
+            console.log('Launching console...');
+            (0, _opn2.default)('http://localhost:' + port);
+
+          case 19:
           case 'end':
             return _context.stop();
         }

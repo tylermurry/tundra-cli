@@ -12,6 +12,7 @@ import settingsHandler from './handlers/settings';
 import profilesHandler from './handlers/profiles';
 import { setState } from './services/state';
 import * as Socket from './services/socket';
+import opn from 'opn';
 
 export const start = async (port, fixturesDirectory) => {
 
@@ -33,9 +34,9 @@ export const start = async (port, fixturesDirectory) => {
   server.get('/profiles', profilesHandler);
 
   // Console
-  server.use('/console', express.static('console/build'));
+  server.use(express.static('console/build'));
 
-  server.listen(port, () => console.log(chalk.green(`Tundra server started. Console available at http://localhost:${port}/console.`)));
+  server.listen(port, () => console.log(chalk.green(`Tundra server started. Console available at http://localhost:${port}.`)));
 
   // Websocket Server
   const socketPort = await Socket.init();
@@ -43,6 +44,10 @@ export const start = async (port, fixturesDirectory) => {
   console.log(`Socket started on port ${socketPort}. Waiting for client to join...`);
 
   setState({ port, socketPort, fixturesDirectory });
+
+  // Launch Console
+  console.log(`Launching console...`);
+  opn(`http://localhost:${port}`);
 };
 
 

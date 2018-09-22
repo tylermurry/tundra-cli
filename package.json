@@ -30,6 +30,7 @@
     "get-port": "^4.0.0",
     "lodash": "^4.17.5",
     "mkdirp": "^0.5.1",
+    "opn": "^5.4.0",
     "ws": "^6.0.0"
   },
   "devDependencies": {
