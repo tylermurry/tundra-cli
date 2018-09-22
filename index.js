@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import program from 'commander';
 import {start} from './src/server';
-import { getState } from './src/state';
+import { getState } from './src/services/state';
 
 program
   .option('-p, --port <port>', 'The port to listen on')

@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { getState, setState } from '../state';
+import { getState, setState } from '../services/state';
 import { getExistingProfileRequests, saveRequestsAsProfile } from '../services/profile';
 import _ from 'lodash';
 

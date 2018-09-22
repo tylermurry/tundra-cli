@@ -7,7 +7,7 @@ var _commander2 = _interopRequireDefault(_commander);
 
 var _server = require('./src/server');
 
-var _state = require('./src/state');
+var _state = require('./src/services/state');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

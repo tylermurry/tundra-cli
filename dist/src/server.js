@@ -29,7 +29,7 @@ var _profiles = require('./handlers/profiles');
 
 var _profiles2 = _interopRequireDefault(_profiles);
 
-var _state = require('./state');
+var _state = require('./services/state');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

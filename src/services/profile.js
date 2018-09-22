@@ -1,6 +1,6 @@
 import mkdirp from 'mkdirp';
 import fs from 'fs';
-import { getState } from '../state';
+import { getState } from './state';
 
 export const PROFILE_DIRECTORY = `${process.cwd()}/${getState().fixturesDirectory}/profiles`;
 

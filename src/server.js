@@ -10,7 +10,7 @@ import {
 } from './handlers/requests';
 import settingsHandler from './handlers/settings';
 import profilesHandler from './handlers/profiles';
-import { setState } from './state';
+import { setState } from './services/state';
 
 export const start = async (port, fixturesDirectory) => {
 

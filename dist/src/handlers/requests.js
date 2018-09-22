@@ -9,7 +9,7 @@ var _chalk = require('chalk');
 
 var _chalk2 = _interopRequireDefault(_chalk);
 
-var _state = require('../state');
+var _state = require('../services/state');
 
 var _profile = require('../services/profile');
 
