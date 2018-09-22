@@ -9,6 +9,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 // Default State
 var state = {
   port: 9091,
+  socketPort: null,
   fixturesDirectory: 'fixtures',
   requests: []
 };

@@ -20,15 +20,17 @@
   "author": "Tyler Murry",
   "license": "MIT",
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "body-parser": "^1.18.2",
     "chalk": "^2.3.2",
     "co": "^4.6.0",
     "co-prompt": "^1.0.0",
     "commander": "^2.15.1",
     "express": "^4.16.3",
+    "get-port": "^4.0.0",
     "lodash": "^4.17.5",
     "mkdirp": "^0.5.1",
-    "babel-polyfill": "^6.26.0"
+    "ws": "^6.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

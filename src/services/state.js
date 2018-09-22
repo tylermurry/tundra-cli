@@ -1,6 +1,7 @@
 // Default State
 let state = {
   port: 9091,
+  socketPort: null,
   fixturesDirectory: 'fixtures',
   requests: []
 };

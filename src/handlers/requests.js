@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { getState, setState } from '../services/state';
 import { getExistingProfileRequests, saveRequestsAsProfile } from '../services/profile';
 import _ from 'lodash';
+import { sendSocketMessage } from '../services/socket';
 
 export const handleRequest = (request, response) => handle('normal', request, response);
 export const handleMatchedRequest = (request, response) => handle('matched', request, response);
@@ -14,9 +15,10 @@ const handle = (type, request, response) => {
 
   console.log(chalk.blue(`--> [${type}] ${embeddedRequest.method} ${embeddedRequest.url} `) + chalk.yellow(`(${embeddedResponse.statusCode})`));
 
-  setState({
-    requests: getState().requests.concat({ type, data: request.body })
-  });
+  const requestData = { type, data: request.body };
+  sendSocketMessage(JSON.stringify(requestData));
+
+  setState({ requests: getState().requests.concat(requestData) });
 
   response.status(201).send();
 };

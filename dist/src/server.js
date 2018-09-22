@@ -31,20 +31,23 @@ var _profiles2 = _interopRequireDefault(_profiles);
 
 var _state = require('./services/state');
 
+var _socket = require('./services/socket');
+
+var Socket = _interopRequireWildcard(_socket);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 var start = exports.start = function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(port, fixturesDirectory) {
-    var server;
+    var server, socketPort;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-
-            (0, _state.setState)({ port: port, fixturesDirectory: fixturesDirectory });
-
             server = (0, _express2.default)();
 
             // Settings
@@ -70,7 +73,19 @@ var start = exports.start = function () {
               return console.log(_chalk2.default.green('Tundra server started. Console available at http://localhost:' + port + '/console.'));
             });
 
-          case 13:
+            // Websocket Server
+            _context.next = 14;
+            return Socket.init();
+
+          case 14:
+            socketPort = _context.sent;
+
+
+            console.log('Socket started on port ' + socketPort + '. Waiting for client to join...');
+
+            (0, _state.setState)({ port: port, socketPort: socketPort, fixturesDirectory: fixturesDirectory });
+
+          case 17:
           case 'end':
             return _context.stop();
         }

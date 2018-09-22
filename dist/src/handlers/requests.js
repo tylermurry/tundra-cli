@@ -17,6 +17,8 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _socket = require('../services/socket');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -42,9 +44,10 @@ var handle = function handle(type, request, response) {
 
   console.log(_chalk2.default.blue('--> [' + type + '] ' + embeddedRequest.method + ' ' + embeddedRequest.url + ' ') + _chalk2.default.yellow('(' + embeddedResponse.statusCode + ')'));
 
-  (0, _state.setState)({
-    requests: (0, _state.getState)().requests.concat({ type: type, data: request.body })
-  });
+  var requestData = { type: type, data: request.body };
+  (0, _socket.sendSocketMessage)(JSON.stringify(requestData));
+
+  (0, _state.setState)({ requests: (0, _state.getState)().requests.concat(requestData) });
 
   response.status(201).send();
 };

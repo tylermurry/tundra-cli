@@ -11,10 +11,9 @@ import {
 import settingsHandler from './handlers/settings';
 import profilesHandler from './handlers/profiles';
 import { setState } from './services/state';
+import * as Socket from './services/socket';
 
 export const start = async (port, fixturesDirectory) => {
-
-  setState({ port, fixturesDirectory });
 
   const server = express();
 
@@ -37,6 +36,13 @@ export const start = async (port, fixturesDirectory) => {
   server.use('/console', express.static('console/build'));
 
   server.listen(port, () => console.log(chalk.green(`Tundra server started. Console available at http://localhost:${port}/console.`)));
+
+  // Websocket Server
+  const socketPort = await Socket.init();
+
+  console.log(`Socket started on port ${socketPort}. Waiting for client to join...`);
+
+  setState({ port, socketPort, fixturesDirectory });
 };
 
 
