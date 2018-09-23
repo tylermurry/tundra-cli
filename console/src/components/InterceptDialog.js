@@ -24,7 +24,8 @@ export class InterceptDialog extends Component {
   }
 
   async componentWillMount() {
-    const settings = await (await fetch('/settings')).json();
+    //const settings = await (await fetch('/settings')).json();
+    const settings = { socketPort: 50151 };
 
     ws = new Sockette(`ws://localhost:${settings.socketPort}`, {
       onopen: () => this.setState({ socketConnected: true }),
@@ -80,9 +81,9 @@ export class InterceptDialog extends Component {
         </DialogTitle>
         <DialogContent style={ styles.body }>
           { intercepts.length <= 0
-              ? <h3 style={ styles.noRequests }>No requests have been captured yet</h3>
+              ? <h3 style={ styles.noRequests }>No requests have been captured yet.<br/>Listening for requests...</h3>
               : <div style={styles.interceptsContainer}>
-                  { intercepts.map(intercept => <Intercept intercept={ intercept } />) }
+                  { intercepts.map(intercept => <Intercept key={intercept} intercept={ intercept } />) }
                 </div>
           }
         </DialogContent>

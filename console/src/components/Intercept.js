@@ -4,6 +4,7 @@ import CardContent from "@material-ui/core/CardContent/CardContent";
 import Chip from "@material-ui/core/Chip/Chip";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import CardHeader from "@material-ui/core/CardHeader";
+import InterceptDetails from "./InterceptDetails";
 
 export default class Intercept extends Component {
 
@@ -20,16 +21,12 @@ export default class Intercept extends Component {
     const matchType = intercept.type;
     const { request, response } = intercept.data;
 
-    console.log(intercept);
-
     return (
-      <Card
-        style={ styles.container }
-        onClick={ () => this.setState({ expanded: !this.state.expanded }) }
-      >
+      <Card style={ styles.container }>
         <CardHeader
           disableTypography
           style={ styles.cardHeader(matchType) }
+          onClick={ () => this.setState({ expanded: !this.state.expanded }) }
           title={
             <div style={ styles.content }>
               <Chip label={ request.method } color="primary"/>
@@ -39,8 +36,26 @@ export default class Intercept extends Component {
           }
         />
         { this.state.expanded &&
-            <CardContent>
-              content goes here
+            <CardContent style={ styles.cardContent}>
+              <div style={ styles.status }>
+                <b>Status:</b> { response.statusCode }
+              </div>
+              <div style={ styles.interceptUrl }>
+                <div style={ styles.urlHeader }>URL</div> { request.url }
+              </div>
+              <div style={ styles.interceptDetails }>
+                <InterceptDetails
+                  body={request.body}
+                  headers={ request.headers }
+                  title='Request'
+                />
+                <div style={ styles.spacer } />
+                <InterceptDetails
+                  body={response.content}
+                  headers={ response.headers }
+                  title='Response'
+                />
+              </div>
             </CardContent>
         }
       </Card>
@@ -64,13 +79,15 @@ const styles = {
   container: {
     backgroundColor: defaultBackground,
     margin: '10px 0px',
-    cursor: 'pointer',
   },
   content: {
     padding: '14px 18px',
     display: 'flex',
     justifyItems: 'center',
     alignItems: 'center',
+  },
+  status: {
+    float: 'right'
   },
   url: {
     marginLeft: '12px',
@@ -87,6 +104,25 @@ const styles = {
   cardHeader: (matchType) => ({
     padding: 0,
     display: 'block',
+    cursor: 'pointer',
     backgroundColor: calculateMatchTypeColor(matchType)
   }),
+  cardContent: {
+    borderTop: '1px solid #CCC',
+    backgroundColor: '#FCFCFC'
+  },
+  urlHeader: {
+    marginBottom: '10px',
+    fontWeight: 'bold',
+  },
+  interceptUrl: {
+    margin: '0px',
+    overflowWrap: 'break-word',
+  },
+  interceptDetails: {
+    display: 'flex',
+  },
+  spacer: {
+    width: '15px'
+  }
 };
