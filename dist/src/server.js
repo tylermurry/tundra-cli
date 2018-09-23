@@ -58,6 +58,9 @@ var start = exports.start = function () {
 
             server.use(_bodyParser2.default.json());
 
+            // Console
+            server.use(_express2.default.static('console/build'));
+
             // Routes
             server.delete('/requests', _requests.resetRequestsHandler);
             server.post('/requests', _requests.handleRequest);
@@ -69,9 +72,6 @@ var start = exports.start = function () {
             server.get('/settings', _settings2.default);
 
             server.get('/profiles', _profiles2.default);
-
-            // Console
-            server.use(_express2.default.static('console/build'));
 
             server.listen(port, function () {
               return console.log(_chalk2.default.green('Tundra server started. Console available at http://localhost:' + port + '.'));

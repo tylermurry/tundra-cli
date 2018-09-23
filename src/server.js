@@ -21,6 +21,9 @@ export const start = async (port, fixturesDirectory) => {
   // Settings
   server.use(bodyParser.json());
 
+  // Console
+  server.use(express.static('console/build'));
+
   // Routes
   server.delete('/requests', resetRequestsHandler);
   server.post('/requests', handleRequest);
@@ -32,9 +35,6 @@ export const start = async (port, fixturesDirectory) => {
   server.get('/settings', settingsHandler);
 
   server.get('/profiles', profilesHandler);
-
-  // Console
-  server.use(express.static('console/build'));
 
   server.listen(port, () => console.log(chalk.green(`Tundra server started. Console available at http://localhost:${port}.`)));
 

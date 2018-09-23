@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import './App.css';
 import logo from './logo.png';
 import FormControl from "@material-ui/core/FormControl/FormControl";
 import Select from "@material-ui/core/Select/Select";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 import Button from "@material-ui/core/Button/Button";
+import {InterceptDialog} from "./components/InterceptDialog";
 
 class App extends Component {
 
@@ -12,13 +12,15 @@ class App extends Component {
     super(props);
 
     this.state = {
-      selectedDebugProfile: null,
+      selectedDebugProfile: '',
     }
   }
 
   render() {
     return (
       <div style={styles.body}>
+        <InterceptDialog open close={() => alert('Closed')} />
+
         <div style={styles.header}>
           <img height={200} width={494} src={logo} />
         </div>
@@ -54,7 +56,7 @@ class App extends Component {
           </div>
           <div style={styles.divider} />
           <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>Capture Profile</h2>
+            <h2 style={styles.sectionTitle}>Capture New Profile</h2>
             <p style={styles.sectionDescription}>
               This will start capturing all requests made by the target application.
               Ensure that you have a Tundra client installed and initialized,
