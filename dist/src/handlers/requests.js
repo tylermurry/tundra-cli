@@ -44,7 +44,12 @@ var handle = function handle(type, request, response) {
 
   console.log(_chalk2.default.blue('--> [' + type + '] ' + embeddedRequest.method + ' ' + embeddedRequest.url + ' ') + _chalk2.default.yellow('(' + embeddedResponse.statusCode + ')'));
 
-  var requestData = { type: type, data: request.body };
+  var requestData = {
+    type: type,
+    interceptedOn: new Date(),
+    data: request.body
+  };
+
   (0, _socket.sendSocketMessage)(JSON.stringify(requestData));
 
   (0, _state.setState)({ requests: (0, _state.getState)().requests.concat(requestData) });

@@ -13,16 +13,22 @@ class App extends Component {
 
     this.state = {
       selectedDebugProfile: '',
+      showInterceptDialog: true,
     }
   }
+
+  hideInterceptDialog() { this.setState({ showInterceptDialog: false}); }
 
   render() {
     return (
       <div style={styles.body}>
-        <InterceptDialog open close={() => alert('Closed')} />
+        <InterceptDialog
+          open={ this.state.showInterceptDialog }
+          close={ this.hideInterceptDialog.bind(this) }
+        />
 
         <div style={styles.header}>
-          <img height={200} width={494} src={logo} />
+          <img alt="Tundra Server" height={200} width={494} src={logo} />
         </div>
         <div style={styles.menu}>
           <div style={styles.section}>
@@ -67,7 +73,7 @@ class App extends Component {
                 style={styles.sectionButton}
                 variant="contained"
                 color="primary"
-                onClick={ () => alert('asdf') }
+                onClick={ () => this.setState({ showInterceptDialog: true })}
               >
                 Capture Profile
               </Button>

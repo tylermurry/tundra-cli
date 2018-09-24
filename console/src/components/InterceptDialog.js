@@ -8,24 +8,32 @@ import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import Button from '@material-ui/core/Button/Button';
 import Intercept from './Intercept';
 import Sockette from 'sockette';
+import Input from "@material-ui/core/Input/Input";
+import InputLabel from "@material-ui/core/InputLabel/InputLabel";
+import FormControl from "@material-ui/core/FormControl/FormControl";
 
 let ws;
+const defaultState = {
+  profileName: '',
+  maximized: false,
+  socketConnected: false,
+  intercepts: []
+};
 
 export class InterceptDialog extends Component {
 
   constructor(props) {
     super(props);
 
-    this.state = {
-      maximized: false,
-      socketConnected: false,
-      intercepts: []
-    };
+    this.state = defaultState;
   }
 
-  async componentWillMount() {
-    //const settings = await (await fetch('/settings')).json();
-    const settings = { socketPort: 50151 };
+  async onEnter() {
+    this.setState(defaultState);
+
+    await fetch('/requests', { method: 'DELETE' });
+
+    const settings = await (await fetch('/settings')).json();
 
     ws = new Sockette(`ws://localhost:${settings.socketPort}`, {
       onopen: () => this.setState({ socketConnected: true }),
@@ -35,7 +43,7 @@ export class InterceptDialog extends Component {
     });
   }
 
-  componentWillUnmount() {
+  onExit() {
     if (ws) ws.close();
   }
 
@@ -47,13 +55,44 @@ export class InterceptDialog extends Component {
     });
   }
 
+  closeDialog() {
+    if( window.confirm('You will lose your captured data. Are you sure you want to close?'))
+      this.props.close();
+  }
+
+  changeProfileName(event) {
+    this.setState({ profileName: event.target.value });
+  }
+
+  async saveProfile() {
+    if (window.confirm('Stop capturing and save the profile?')) {
+      const response = await fetch('/requests/save', {
+        method: 'POST',
+        body: JSON.stringify({
+          profileName: this.state.profileName,
+          resetProfile: false, // TODO: Hardcoded for now. Add a UI option for this
+        }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.ok) {
+        alert('Profile successfully saved.');
+        this.props.close();
+      } else {
+        alert('There was a problem saving the profile.');
+      }
+    }
+  }
+
   render() {
-    const { open, close } = this.props;
+    const { open } = this.props;
     const { intercepts, socketConnected } = this.state;
 
     return (
       <Dialog
-        open={open}
+        open={ open }
+        onEnter={ this.onEnter.bind(this) }
+        onExit={ this.onExit.bind(this) }
         fullWidth
         maxWidth='lg'
         fullScreen={ this.state.maximized }
@@ -61,29 +100,43 @@ export class InterceptDialog extends Component {
         <DialogTitle disableTypography style={ styles.dialogTitle }>
           <div style={styles.header}>
             <div style={ styles.title }>
-              <h2>Capturing Profile</h2>
+              <FormControl>
+                <InputLabel>Profile Name</InputLabel>
+                <Input
+                  name="profileName"
+                  value={ this.state.profileName }
+                  onChange={this.changeProfileName.bind(this)}
+                />
+              </FormControl>
               <Button
                 style={ styles.stopButton }
                 variant='contained'
                 color='primary'
+                onClick={ this.saveProfile.bind(this) }
+                disabled={ this.state.profileName.length <= 0 }
               >
-                Stop
+                Save
               </Button>
             </div>
-            <IconButton onClick={ close }>
+            <IconButton onClick={ this.closeDialog.bind(this) }>
               <CloseIcon />
             </IconButton>
           </div>
           <div>
             <h4>{ socketConnected ? `${intercepts.length} Requests Captured` : 'Connecting...' }</h4>
-            <LinearProgress style={styles.progressBar} color='primary' />
+            <LinearProgress color='primary' />
           </div>
         </DialogTitle>
         <DialogContent style={ styles.body }>
           { intercepts.length <= 0
               ? <h3 style={ styles.noRequests }>No requests have been captured yet.<br/>Listening for requests...</h3>
               : <div style={styles.interceptsContainer}>
-                  { intercepts.map(intercept => <Intercept key={intercept} intercept={ intercept } />) }
+                  { intercepts.map(intercept =>
+                      <Intercept
+                        key={ intercept.interceptedOn }
+                        intercept={ intercept }
+                      />
+                  )}
                 </div>
           }
         </DialogContent>

@@ -15,7 +15,12 @@ const handle = (type, request, response) => {
 
   console.log(chalk.blue(`--> [${type}] ${embeddedRequest.method} ${embeddedRequest.url} `) + chalk.yellow(`(${embeddedResponse.statusCode})`));
 
-  const requestData = { type, data: request.body };
+  const requestData = {
+    type,
+    interceptedOn: new Date(),
+    data: request.body
+  };
+
   sendSocketMessage(JSON.stringify(requestData));
 
   setState({ requests: getState().requests.concat(requestData) });
