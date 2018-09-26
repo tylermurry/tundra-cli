@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _fs = require("fs");
+var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
 
-var _profile = require("../services/profile");
+var _profile = require('../services/profile');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34,7 +34,7 @@ exports.default = function () {
 
             _context.next = 7;
             return _fs2.default.readdirSync(_profile.PROFILE_DIRECTORY).map(function (file) {
-              return file;
+              return file.split('.').slice(0, -1).join('.');
             });
 
           case 7:
@@ -48,13 +48,13 @@ exports.default = function () {
 
           case 11:
             _context.prev = 11;
-            _context.t0 = _context["catch"](0);
+            _context.t0 = _context['catch'](0);
 
             console.error(_context.t0);
             response.status(500).send("There was a problem getting the profiles");
 
           case 15:
-          case "end":
+          case 'end':
             return _context.stop();
         }
       }

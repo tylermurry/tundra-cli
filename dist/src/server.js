@@ -41,6 +41,10 @@ var _opn = require('opn');
 
 var _opn2 = _interopRequireDefault(_opn);
 
+var _cors = require('cors');
+
+var _cors2 = _interopRequireDefault(_cors);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -56,8 +60,9 @@ var start = exports.start = function () {
           case 0:
             server = (0, _express2.default)();
 
-            // Settings
+            // Middleware
 
+            server.use((0, _cors2.default)());
             server.use(_bodyParser2.default.json());
 
             // Console
@@ -81,10 +86,10 @@ var start = exports.start = function () {
             });
 
             // Websocket Server
-            _context.next = 14;
+            _context.next = 15;
             return Socket.init();
 
-          case 14:
+          case 15:
             socketPort = _context.sent;
 
 
@@ -96,7 +101,7 @@ var start = exports.start = function () {
             console.log('Launching console...');
             (0, _opn2.default)('http://localhost:' + port);
 
-          case 19:
+          case 20:
           case 'end':
             return _context.stop();
         }

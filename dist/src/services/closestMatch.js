@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getClosestProfileMatches = exports.SIMILARITY_THRESHOLD = undefined;
+exports.getClosestProfileMatch = exports.SIMILARITY_THRESHOLD = undefined;
 
 var _profile = require("./profile");
 
@@ -21,7 +21,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 var SIMILARITY_THRESHOLD = exports.SIMILARITY_THRESHOLD = 0.75;
 
-var getClosestProfileMatches = exports.getClosestProfileMatches = function () {
+var getClosestProfileMatch = exports.getClosestProfileMatch = function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(originalRequest, profileName) {
     var requests, matches;
     return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -43,7 +43,7 @@ var getClosestProfileMatches = exports.getClosestProfileMatches = function () {
               if (similarity > SIMILARITY_THRESHOLD) matches.push({ similarity: similarity, request: request });
             });
 
-            return _context.abrupt("return", (0, _lodash2.default)(matches).chain().sortBy('similarity').value().reverse());
+            return _context.abrupt("return", (0, _lodash2.default)(matches).chain().sortBy('similarity').value().reverse()[0]);
 
           case 6:
           case "end":
@@ -53,7 +53,7 @@ var getClosestProfileMatches = exports.getClosestProfileMatches = function () {
     }, _callee, undefined);
   }));
 
-  return function getClosestProfileMatches(_x, _x2) {
+  return function getClosestProfileMatch(_x, _x2) {
     return _ref.apply(this, arguments);
   };
 }();

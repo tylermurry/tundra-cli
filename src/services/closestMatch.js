@@ -4,7 +4,7 @@ import _ from "lodash";
 
 export const SIMILARITY_THRESHOLD = 0.75;
 
-export const getClosestProfileMatches = async (originalRequest, profileName) => {
+export const getClosestProfileMatch = async (originalRequest, profileName) => {
 
   const requests = await getExistingProfileRequests(profileName);
 
@@ -22,5 +22,5 @@ export const getClosestProfileMatches = async (originalRequest, profileName) => 
     .chain()
     .sortBy('similarity')
     .value()
-    .reverse();
+    .reverse()[0];
 };

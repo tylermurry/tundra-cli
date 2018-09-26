@@ -5,6 +5,11 @@ import Select from "@material-ui/core/Select/Select";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 import Button from "@material-ui/core/Button/Button";
 import {InterceptDialog} from "./components/InterceptDialog";
+import InputLabel from "@material-ui/core/InputLabel/InputLabel";
+
+// TODO: Call /settings after successful capture
+// TODO: Call DELETE /debug after closing capture dialog
+// TODO: Implement diff functionality
 
 class App extends Component {
 
@@ -13,11 +18,30 @@ class App extends Component {
 
     this.state = {
       selectedDebugProfile: '',
-      showInterceptDialog: true,
+      showInterceptDialog: false,
+      profileNames: [],
+      debugging: false,
     }
   }
 
-  hideInterceptDialog() { this.setState({ showInterceptDialog: false}); }
+  async componentWillMount() {
+    await this.refreshProfiles();
+  }
+
+  async refreshProfiles() {
+    const profileNames = await (await fetch('/profiles')).json();
+
+    this.setState({ profileNames });
+  }
+
+  hideInterceptDialog() { this.setState({ showInterceptDialog: false, debugging: false }); }
+
+  async showDebugDialog() {
+    this.setState({ showInterceptDialog: true, debugging: true });
+
+    await fetch('/debug', { method: 'DELETE' });
+    await fetch(`/debug/profile/${this.state.selectedDebugProfile}`, { method: 'POST' });
+  }
 
   render() {
     return (
@@ -25,10 +49,12 @@ class App extends Component {
         <InterceptDialog
           open={ this.state.showInterceptDialog }
           close={ this.hideInterceptDialog.bind(this) }
+          debugging={ this.state.debugging }
+          debugProfileName={ this.state.selectedDebugProfile }
         />
 
         <div style={styles.header}>
-          <img alt="Tundra Server" height={200} width={494} src={logo} />
+          {/*<img alt="Tundra Server" height={ 200 } width={ 494 } src={ logo } />*/}
         </div>
         <div style={styles.menu}>
           <div style={styles.section}>
@@ -38,23 +64,28 @@ class App extends Component {
               issues with requests not matching.<br/>
               Select the profile you would like to debug against below:
             </p>
-            <FormControl style={styles.profileSelector}>
-              <Select
-                name="profile"
-                value={ this.state.selectedDebugProfile }
-                onChange={ (e) => this.setState({ selectedDebugProfile: e.target.value })}
-              >
-                <MenuItem value="A">A</MenuItem>
-                <MenuItem value="B">B</MenuItem>
-                <MenuItem value="C">C</MenuItem>
-              </Select>
-            </FormControl>
+            { this.state.profileNames.length > 0
+                ? <FormControl style={styles.profileSelector}>
+                  <InputLabel>Profile Name</InputLabel>
+                  <Select
+                    name="profile"
+                    value={this.state.selectedDebugProfile}
+                    onChange={(e) => this.setState({selectedDebugProfile: e.target.value})}
+                  >
+                    {this.state.profileNames.map(profileName =>
+                      <MenuItem value={ profileName }>{ profileName }</MenuItem>
+                    )}
+                  </Select>
+                </FormControl>
+              : <div><b>No profiles found to debug</b></div>
+            }
             <div style={styles.sectionButtonContainer}>
               <Button
                 style={styles.sectionButton}
                 variant="contained"
                 color="primary"
-                onClick={ () => alert('asdf') }
+                disabled={ !this.state.selectedDebugProfile || this.state.profileNames.length <= 0 }
+                onClick={ this.showDebugDialog.bind(this) }
               >
                 Debug Profile
               </Button>
@@ -75,7 +106,7 @@ class App extends Component {
                 color="primary"
                 onClick={ () => this.setState({ showInterceptDialog: true })}
               >
-                Capture Profile
+                Start Capture
               </Button>
             </div>
           </div>

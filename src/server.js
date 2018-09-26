@@ -13,12 +13,14 @@ import profilesHandler from './handlers/profiles';
 import { setState } from './services/state';
 import * as Socket from './services/socket';
 import opn from 'opn';
+import cors from 'cors';
 
 export const start = async (port, fixturesDirectory) => {
 
   const server = express();
 
-  // Settings
+  // Middleware
+  server.use(cors());
   server.use(bodyParser.json());
 
   // Console

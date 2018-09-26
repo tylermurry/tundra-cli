@@ -5,6 +5,8 @@ import Chip from "@material-ui/core/Chip/Chip";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import CardHeader from "@material-ui/core/CardHeader";
 import InterceptDetails from "./InterceptDetails";
+import Button from "@material-ui/core/Button/Button";
+import ErrorOutline from '@material-ui/icons/ErrorOutline'
 
 export default class Intercept extends Component {
 
@@ -17,7 +19,7 @@ export default class Intercept extends Component {
   }
 
   render() {
-    const { intercept } = this.props;
+    const { intercept, debugging } = this.props;
     const matchType = intercept.type;
     const { request, response } = intercept.data;
 
@@ -25,7 +27,7 @@ export default class Intercept extends Component {
       <Card style={ styles.container }>
         <CardHeader
           disableTypography
-          style={ styles.cardHeader(matchType) }
+          style={ styles.cardHeader(matchType, debugging) }
           onClick={ () => this.setState({ expanded: !this.state.expanded }) }
           title={
             <div style={ styles.content }>
@@ -37,11 +39,37 @@ export default class Intercept extends Component {
         />
         { this.state.expanded &&
             <CardContent style={ styles.cardContent}>
+              { debugging &&
+                <div style={styles.diffMessage}>
+                  <ErrorOutline />
+                  <span style={styles.diffMessageText}>
+                    <b>This request was not fully matched.&nbsp;</b>
+                    { intercept.closestMatch
+                        ? 'Compare it with the closest match found in the profile for more details'
+                        : 'No close matches could be found within the profile.'
+                    }
+                  </span>
+                  { intercept.closestMatch &&
+                      <Button
+                        variant='contained'
+                        color='primary'
+                        onClick={() => this.props.showDiffDialog(request, intercept.closestMatch)}>
+                        View Diff
+                      </Button>
+                  }
+                </div>
+              }
               <div style={ styles.status }>
                 <b>Status:</b> { response.statusCode }
               </div>
               <div style={ styles.interceptUrl }>
-                <div style={ styles.urlHeader }>URL</div> { request.url }
+                <div style={ styles.urlHeader }>URL</div>
+                <textarea
+                  style={ styles.urlContent }
+                  rows={3}
+                  readOnly
+                  value={ request.url }
+                />
               </div>
               <div style={ styles.interceptDetails }>
                 <InterceptDetails
@@ -65,8 +93,8 @@ export default class Intercept extends Component {
 
 export const defaultBackground = '#EEE';
 
-export const calculateMatchTypeColor = (matchType) => {
-  if (!matchType) return defaultBackground;
+export const calculateMatchTypeColor = (matchType, debugging) => {
+  if (!matchType || !debugging) return defaultBackground;
   if (matchType.toUpperCase() === 'NORMAL') return defaultBackground;
   if (matchType.toUpperCase() === 'MATCHED') return defaultBackground;
   if (matchType.toUpperCase() === 'PARTIALLY-MATCHED') return '#FEFFBB';
@@ -101,11 +129,11 @@ const styles = {
     height: '30px',
     width: '30px',
   },
-  cardHeader: (matchType) => ({
+  cardHeader: (matchType, debugging) => ({
     padding: 0,
     display: 'block',
     cursor: 'pointer',
-    backgroundColor: calculateMatchTypeColor(matchType)
+    backgroundColor: calculateMatchTypeColor(matchType, debugging)
   }),
   cardContent: {
     borderTop: '1px solid #CCC',
@@ -124,5 +152,33 @@ const styles = {
   },
   spacer: {
     width: '15px'
+  },
+  diffMessage: {
+    padding: '10px',
+    backgroundColor: '#FFEB91',
+    borderRadius: 3,
+    width: '100%',
+    boxSizing: 'border-box',
+    border: '1px solid #CCC',
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '15px',
+  },
+  diffMessageText: {
+    flexGrow: 1,
+    marginLeft: '5px'
+  },
+  urlContent: {
+    padding: '10px',
+    backgroundColor: '#EEE',
+    borderRadius: 3,
+    width: '100%',
+    boxSizing: 'border-box',
+    border: '1px solid #CCC',
+    overflow: 'auto',
+    outline: 'none',
+    resize: 'none',
+    fontFamily: 'Courier New',
+    fontSize: '14px',
   }
 };

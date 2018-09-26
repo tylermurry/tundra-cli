@@ -3,7 +3,7 @@ import { getState, setState } from '../services/state';
 import { getExistingProfileRequests, saveRequestsAsProfile } from '../services/profile';
 import _ from 'lodash';
 import { sendSocketMessage } from '../services/socket';
-import { getClosestProfileMatches } from '../services/closestMatch';
+import { getClosestProfileMatch } from '../services/closestMatch';
 
 export const handleRequest = async (request, response) => {
   const type = request.params.type ? request.params.type : 'normal';
@@ -21,8 +21,9 @@ export const handleRequest = async (request, response) => {
   if (type === 'unmatched') {
     requestData.reason = request.get("Reason");
 
-    if (requestData.reason === "Not Found")
-      requestData.closestMatches = await getClosestProfileMatches(request.body, getState().debugProfile);
+    if (requestData.reason === "Not Found") {
+      requestData.closestMatch = await getClosestProfileMatch(request.body, getState().debugProfile);
+    }
   }
 
   sendSocketMessage(JSON.stringify(requestData));

@@ -8,8 +8,10 @@
     "@material-ui/lab": "^3.0.0-alpha.16",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-gh-like-diff": "^0.0.79",
     "react-scripts": "1.1.5",
-    "sockette": "^2.0.0"
+    "sockette": "^2.0.0",
+    "diff": "latest"
   },
   "scripts": {
     "start": "react-scripts start",

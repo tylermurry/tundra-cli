@@ -11,13 +11,16 @@ import Sockette from 'sockette';
 import Input from "@material-ui/core/Input/Input";
 import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import FormControl from "@material-ui/core/FormControl/FormControl";
+import {DiffDialog} from "./DiffDialog";
 
 let ws;
 const defaultState = {
   profileName: '',
-  maximized: false,
   socketConnected: false,
-  intercepts: []
+  intercepts: [],
+  diffRequest: null,
+  diffRequestMatch: null,
+  showDiffDialog: false,
 };
 
 export class InterceptDialog extends Component {
@@ -32,7 +35,6 @@ export class InterceptDialog extends Component {
     this.setState(defaultState);
 
     await fetch('/requests', { method: 'DELETE' });
-
     const settings = await (await fetch('/settings')).json();
 
     ws = new Sockette(`ws://localhost:${settings.socketPort}`, {
@@ -56,7 +58,9 @@ export class InterceptDialog extends Component {
   }
 
   closeDialog() {
-    if( window.confirm('You will lose your captured data. Are you sure you want to close?'))
+    if (this.props.debugging)
+      this.props.close();
+    else if(window.confirm('You will lose your captured data. Are you sure you want to close?'))
       this.props.close();
   }
 
@@ -84,63 +88,84 @@ export class InterceptDialog extends Component {
     }
   }
 
+  showDiffDialog(request, match) {
+    this.setState({
+      diffRequest: request,
+      diffRequestMatch: match,
+      showDiffDialog: true,
+    })
+  }
+
   render() {
-    const { open } = this.props;
+    const { open, debugging, debugProfileName } = this.props;
     const { intercepts, socketConnected } = this.state;
 
     return (
-      <Dialog
-        open={ open }
-        onEnter={ this.onEnter.bind(this) }
-        onExit={ this.onExit.bind(this) }
-        fullWidth
-        maxWidth='lg'
-        fullScreen={ this.state.maximized }
-      >
-        <DialogTitle disableTypography style={ styles.dialogTitle }>
-          <div style={styles.header}>
-            <div style={ styles.title }>
-              <FormControl>
-                <InputLabel>Profile Name</InputLabel>
-                <Input
-                  name="profileName"
-                  value={ this.state.profileName }
-                  onChange={this.changeProfileName.bind(this)}
-                />
-              </FormControl>
-              <Button
-                style={ styles.stopButton }
-                variant='contained'
-                color='primary'
-                onClick={ this.saveProfile.bind(this) }
-                disabled={ this.state.profileName.length <= 0 }
-              >
-                Save
-              </Button>
+      <div>
+        <DiffDialog
+          open={ this.state.showDiffDialog }
+          request={ this.state.diffRequest }
+          requestMatch={ this.state.diffRequestMatch }
+          close={ () => this.setState({ showDiffDialog: false })}
+        />
+        <Dialog
+          open={ open }
+          onEnter={ this.onEnter.bind(this) }
+          onExit={ this.onExit.bind(this) }
+          fullScreen
+        >
+          <DialogTitle disableTypography style={ styles.dialogTitle }>
+            <div style={styles.header}>
+              <div style={styles.title}>
+                { debugging
+                    ? <h2>Debugging '{ debugProfileName }'</h2>
+                    : <div>
+                        <FormControl>
+                          <InputLabel>Profile Name</InputLabel>
+                          <Input
+                            name="profileName"
+                            value={this.state.profileName}
+                            onChange={this.changeProfileName.bind(this)}
+                          />
+                        </FormControl>
+                        <Button
+                          style={styles.stopButton}
+                          variant='contained'
+                          color='primary'
+                          onClick={this.saveProfile.bind(this)}
+                          disabled={this.state.profileName.length <= 0}
+                        >
+                          Save
+                        </Button>
+                      </div>
+                }
+              </div>
+              <IconButton onClick={ this.closeDialog.bind(this) }>
+                <CloseIcon />
+              </IconButton>
             </div>
-            <IconButton onClick={ this.closeDialog.bind(this) }>
-              <CloseIcon />
-            </IconButton>
-          </div>
-          <div>
-            <h4>{ socketConnected ? `${intercepts.length} Requests Captured` : 'Connecting...' }</h4>
-            <LinearProgress color='primary' />
-          </div>
-        </DialogTitle>
-        <DialogContent style={ styles.body }>
-          { intercepts.length <= 0
-              ? <h3 style={ styles.noRequests }>No requests have been captured yet.<br/>Listening for requests...</h3>
-              : <div style={styles.interceptsContainer}>
-                  { intercepts.map(intercept =>
-                      <Intercept
-                        key={ intercept.interceptedOn }
-                        intercept={ intercept }
-                      />
-                  )}
-                </div>
-          }
-        </DialogContent>
-      </Dialog>
+            <div>
+              <h4>{ socketConnected ? `${intercepts.length} Requests Captured` : 'Connecting...' }</h4>
+              <LinearProgress color='primary' />
+            </div>
+          </DialogTitle>
+          <DialogContent style={ styles.body }>
+            { intercepts.length <= 0
+                ? <h3 style={ styles.noRequests }>No requests have been captured yet.<br/>Listening for requests...</h3>
+                : <div style={styles.interceptsContainer}>
+                    { intercepts.map(intercept =>
+                        <Intercept
+                          key={ intercept.interceptedOn }
+                          intercept={ intercept }
+                          debugging={ debugging }
+                          showDiffDialog={ this.showDiffDialog.bind(this) }
+                        />
+                    )}
+                  </div>
+            }
+          </DialogContent>
+        </Dialog>
+      </div>
     )
   }
 }

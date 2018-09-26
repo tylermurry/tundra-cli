@@ -60,10 +60,10 @@ var handleRequest = exports.handleRequest = function () {
             }
 
             _context.next = 10;
-            return (0, _closestMatch.getClosestProfileMatches)(request.body, (0, _state.getState)().debugProfile);
+            return (0, _closestMatch.getClosestProfileMatch)(request.body, (0, _state.getState)().debugProfile);
 
           case 10:
-            requestData.closestMatches = _context.sent;
+            requestData.closestMatch = _context.sent;
 
           case 11:
 
