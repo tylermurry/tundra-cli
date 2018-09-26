@@ -3,13 +3,10 @@ import { getState, setState } from '../services/state';
 import { getExistingProfileRequests, saveRequestsAsProfile } from '../services/profile';
 import _ from 'lodash';
 import { sendSocketMessage } from '../services/socket';
+import { getClosestProfileMatches } from '../services/closestMatch';
 
-export const handleRequest = (request, response) => handle('normal', request, response);
-export const handleMatchedRequest = (request, response) => handle('matched', request, response);
-export const handlePartiallyMatchedRequest = (request, response) => handle('partially-matched', request, response);
-export const handleUnmatchedRequest = (request, response) => handle('unmatched', request, response);
-
-const handle = (type, request, response) => {
+export const handleRequest = async (request, response) => {
+  const type = request.params.type ? request.params.type : 'normal';
   const embeddedRequest = request.body.request;
   const embeddedResponse = request.body.response;
 
@@ -20,6 +17,13 @@ const handle = (type, request, response) => {
     interceptedOn: new Date(),
     data: request.body
   };
+
+  if (type === 'unmatched') {
+    requestData.reason = request.get("Reason");
+
+    if (requestData.reason === "Not Found")
+      requestData.closestMatches = await getClosestProfileMatches(request.body, getState().debugProfile);
+  }
 
   sendSocketMessage(JSON.stringify(requestData));
 

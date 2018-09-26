@@ -11,7 +11,8 @@ var state = {
   port: 9091,
   socketPort: null,
   fixturesDirectory: 'fixtures',
-  requests: []
+  requests: [],
+  debugProfile: null
 };
 
 var setState = exports.setState = function setState(newState) {

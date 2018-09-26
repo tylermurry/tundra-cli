@@ -3,7 +3,8 @@ let state = {
   port: 9091,
   socketPort: null,
   fixturesDirectory: 'fixtures',
-  requests: []
+  requests: [],
+  debugProfile: null,
 };
 
 export const setState = (newState) => {

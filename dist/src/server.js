@@ -21,6 +21,8 @@ var _chalk2 = _interopRequireDefault(_chalk);
 
 var _requests = require('./handlers/requests');
 
+var _debugHandler = require('./handlers/debugHandler');
+
 var _settings = require('./handlers/settings');
 
 var _settings2 = _interopRequireDefault(_settings);
@@ -64,12 +66,13 @@ var start = exports.start = function () {
             // Routes
             server.delete('/requests', _requests.resetRequestsHandler);
             server.post('/requests', _requests.handleRequest);
-            server.post('/requests/matched', _requests.handleMatchedRequest);
-            server.post('/requests/partially-matched', _requests.handlePartiallyMatchedRequest);
-            server.post('/requests/unmatched', _requests.handleUnmatchedRequest);
+            server.post('/requests/:type', _requests.handleRequest);
             server.post('/requests/save', _requests.saveRequestsHandler);
 
             server.get('/settings', _settings2.default);
+
+            server.post('/debug/profile/:profileName', _debugHandler.startDebuggingRequest);
+            server.delete('/debug', _debugHandler.stopDebuggingRequest);
 
             server.get('/profiles', _profiles2.default);
 
