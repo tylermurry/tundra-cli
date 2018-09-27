@@ -22,6 +22,7 @@ export default class Intercept extends Component {
     const { intercept, debugging } = this.props;
     const unmatched = intercept.type === 'unmatched';
     const { request, response } = intercept.data;
+    const { closestMatch } = intercept;
 
     return (
       <Card style={ styles.container }>
@@ -32,7 +33,7 @@ export default class Intercept extends Component {
           title={
             <div style={ styles.content }>
               <Chip label={ request.method } color="primary"/>
-              { unmatched && <Chip style={ styles.unmatchedChip } label="UNMATCHED" /> }
+              { debugging && unmatched && <Chip style={ styles.unmatchedChip } label="UNMATCHED" /> }
               <span style={styles.url}>{ request.url }</span>
               <ExpandMore style={ styles.expandIcon }/>
             </div>
@@ -40,28 +41,28 @@ export default class Intercept extends Component {
         />
         { this.state.expanded &&
             <CardContent style={ styles.cardContent}>
-              { debugging &&
+              { debugging && unmatched &&
                 <div style={styles.diffMessage}>
                   <ErrorOutline />
                   <span style={styles.diffMessageText}>
-                    <b>This request was not fully matched.&nbsp;</b>
-                    { intercept.closestMatch
+                    <b>This request was not matched.&nbsp;</b>
+                    { closestMatch
                         ? 'Compare it with the closest match found in the profile for more details'
                         : 'No close matches could be found within the profile.'
                     }
                   </span>
-                  { intercept.closestMatch &&
+                  { closestMatch &&
                       <Button
                         variant='contained'
                         color='primary'
-                        onClick={() => this.props.showDiffDialog(request, intercept.closestMatch)}>
+                        onClick={() => this.props.showDiffDialog(request, closestMatch)}>
                         View Diff
                       </Button>
                   }
                 </div>
               }
               <div style={ styles.status }>
-                <b>Status:</b> { response.statusCode }
+                <b>Status:</b> { response ? response.statusCode : 'No Response' }
               </div>
               <div style={ styles.interceptUrl }>
                 <div style={ styles.urlHeader }>URL</div>
@@ -80,8 +81,8 @@ export default class Intercept extends Component {
                 />
                 <div style={ styles.spacer } />
                 <InterceptDetails
-                  body={response.content}
-                  headers={ response.headers }
+                  body={response ? response.content : ''}
+                  headers={ response ? response.headers : ''}
                   title='Response'
                 />
               </div>

@@ -25,7 +25,7 @@ class App extends Component {
   }
 
   async refreshProfiles() {
-    const profileNames = await (await fetch('/profiles')).json();
+    const profileNames = await (await fetch('http://localhost:9091/profiles')).json();
 
     this.setState({ profileNames });
   }
@@ -35,8 +35,8 @@ class App extends Component {
   async showDebugDialog() {
     this.setState({ showInterceptDialog: true, debugging: true });
 
-    await fetch('/debug', { method: 'DELETE' });
-    await fetch(`/debug/profile/${this.state.selectedDebugProfile}`, { method: 'POST' });
+    await fetch('http://localhost:9091/debug', { method: 'DELETE' });
+    await fetch(`http://localhost:9091/debug/profile/${this.state.selectedDebugProfile}`, { method: 'POST' });
   }
 
   render() {

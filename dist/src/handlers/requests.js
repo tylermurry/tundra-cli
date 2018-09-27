@@ -39,7 +39,7 @@ var handleRequest = exports.handleRequest = function () {
             embeddedResponse = request.body.response;
 
 
-            console.log(_chalk2.default.blue('--> [' + type + '] ' + embeddedRequest.method + ' ' + embeddedRequest.url + ' ') + _chalk2.default.yellow('(' + embeddedResponse.statusCode + ')'));
+            console.log(_chalk2.default.blue('--> [' + type + '] ' + embeddedRequest.method + ' ' + embeddedRequest.url + ' ') + _chalk2.default.yellow('(' + (embeddedResponse ? embeddedResponse.statusCode : 'No Response') + ')'));
 
             requestData = {
               type: type,
@@ -48,24 +48,17 @@ var handleRequest = exports.handleRequest = function () {
             };
 
             if (!(type === 'unmatched')) {
-              _context.next = 11;
+              _context.next = 9;
               break;
             }
 
-            requestData.reason = request.get("Reason");
-
-            if (!(requestData.reason === "Not Found")) {
-              _context.next = 11;
-              break;
-            }
-
-            _context.next = 10;
+            _context.next = 8;
             return (0, _closestMatch.getClosestProfileMatch)(request.body, (0, _state.getState)().debugProfile);
 
-          case 10:
+          case 8:
             requestData.closestMatch = _context.sent;
 
-          case 11:
+          case 9:
 
             (0, _socket.sendSocketMessage)(JSON.stringify(requestData));
 
@@ -73,7 +66,7 @@ var handleRequest = exports.handleRequest = function () {
 
             response.status(201).send();
 
-          case 14:
+          case 12:
           case 'end':
             return _context.stop();
         }

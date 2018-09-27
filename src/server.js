@@ -29,7 +29,7 @@ export const start = async (port, fixturesDirectory) => {
   // Routes
   server.delete('/requests', resetRequestsHandler);
   server.post('/requests', handleRequest);
-  server.post('/requests/:type', handleRequest);
+  server.post('/requests/type/:type', handleRequest);
   server.post('/requests/save', saveRequestsHandler);
 
   server.get('/settings', settingsHandler);

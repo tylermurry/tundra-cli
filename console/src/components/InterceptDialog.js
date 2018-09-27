@@ -34,8 +34,8 @@ export class InterceptDialog extends Component {
   async onEnter() {
     this.setState(defaultState);
 
-    await fetch('/requests', { method: 'DELETE' });
-    const settings = await (await fetch('/settings')).json();
+    await fetch('http://localhost:9091/requests', { method: 'DELETE' });
+    const settings = await (await fetch('http://localhost:9091/settings')).json();
 
     ws = new Sockette(`ws://localhost:${settings.socketPort}`, {
       onopen: () => this.setState({ socketConnected: true }),
@@ -70,7 +70,7 @@ export class InterceptDialog extends Component {
 
   async saveProfile() {
     if (window.confirm('Stop capturing and save the profile?')) {
-      const response = await fetch('/requests/save', {
+      const response = await fetch('http://localhost:9091/requests/save', {
         method: 'POST',
         body: JSON.stringify({
           profileName: this.state.profileName,

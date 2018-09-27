@@ -10,7 +10,10 @@ export const handleRequest = async (request, response) => {
   const embeddedRequest = request.body.request;
   const embeddedResponse = request.body.response;
 
-  console.log(chalk.blue(`--> [${type}] ${embeddedRequest.method} ${embeddedRequest.url} `) + chalk.yellow(`(${embeddedResponse.statusCode})`));
+  console.log(
+    chalk.blue(`--> [${type}] ${embeddedRequest.method} ${embeddedRequest.url} `) +
+    chalk.yellow(`(${ embeddedResponse ? embeddedResponse.statusCode : 'No Response' })`)
+  );
 
   const requestData = {
     type,
@@ -19,11 +22,7 @@ export const handleRequest = async (request, response) => {
   };
 
   if (type === 'unmatched') {
-    requestData.reason = request.get("Reason");
-
-    if (requestData.reason === "Not Found") {
-      requestData.closestMatch = await getClosestProfileMatch(request.body, getState().debugProfile);
-    }
+    requestData.closestMatch = await getClosestProfileMatch(request.body, getState().debugProfile);
   }
 
   sendSocketMessage(JSON.stringify(requestData));

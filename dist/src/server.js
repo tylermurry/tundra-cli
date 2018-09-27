@@ -71,7 +71,7 @@ var start = exports.start = function () {
             // Routes
             server.delete('/requests', _requests.resetRequestsHandler);
             server.post('/requests', _requests.handleRequest);
-            server.post('/requests/:type', _requests.handleRequest);
+            server.post('/requests/type/:type', _requests.handleRequest);
             server.post('/requests/save', _requests.saveRequestsHandler);
 
             server.get('/settings', _settings2.default);
