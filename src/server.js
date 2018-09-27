@@ -14,6 +14,7 @@ import { setState } from './services/state';
 import * as Socket from './services/socket';
 import opn from 'opn';
 import cors from 'cors';
+import path from 'path';
 
 export const start = async (port, fixturesDirectory) => {
 
@@ -24,7 +25,7 @@ export const start = async (port, fixturesDirectory) => {
   server.use(bodyParser.json());
 
   // Console
-  server.use(express.static('console/build'));
+  server.use(express.static(path.join(__dirname + '../../../console/build')));
 
   // Routes
   server.delete('/requests', resetRequestsHandler);
