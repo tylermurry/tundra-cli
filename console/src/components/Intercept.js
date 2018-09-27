@@ -20,18 +20,19 @@ export default class Intercept extends Component {
 
   render() {
     const { intercept, debugging } = this.props;
-    const matchType = intercept.type;
+    const unmatched = intercept.type === 'unmatched';
     const { request, response } = intercept.data;
 
     return (
       <Card style={ styles.container }>
         <CardHeader
           disableTypography
-          style={ styles.cardHeader(matchType, debugging) }
+          style={ styles.cardHeader }
           onClick={ () => this.setState({ expanded: !this.state.expanded }) }
           title={
             <div style={ styles.content }>
               <Chip label={ request.method } color="primary"/>
+              { unmatched && <Chip style={ styles.unmatchedChip } label="UNMATCHED" /> }
               <span style={styles.url}>{ request.url }</span>
               <ExpandMore style={ styles.expandIcon }/>
             </div>
@@ -91,21 +92,9 @@ export default class Intercept extends Component {
   }
 }
 
-export const defaultBackground = '#EEE';
-
-export const calculateMatchTypeColor = (matchType, debugging) => {
-  if (!matchType || !debugging) return defaultBackground;
-  if (matchType.toUpperCase() === 'NORMAL') return defaultBackground;
-  if (matchType.toUpperCase() === 'MATCHED') return defaultBackground;
-  if (matchType.toUpperCase() === 'PARTIALLY-MATCHED') return '#FEFFBB';
-  if (matchType.toUpperCase() === 'UNMATCHED') return '#FFBBBB';
-
-  return defaultBackground;
-};
-
 const styles = {
   container: {
-    backgroundColor: defaultBackground,
+    backgroundColor: '#EEE',
     margin: '10px 0px',
   },
   content: {
@@ -129,12 +118,17 @@ const styles = {
     height: '30px',
     width: '30px',
   },
-  cardHeader: (matchType, debugging) => ({
+  cardHeader: {
     padding: 0,
     display: 'block',
     cursor: 'pointer',
-    backgroundColor: calculateMatchTypeColor(matchType, debugging)
-  }),
+    backgroundColor: '#EEE',
+  },
+  unmatchedChip: {
+    backgroundColor: '#CC2D14',
+    color: 'white',
+    marginLeft: '10px',
+  },
   cardContent: {
     borderTop: '1px solid #CCC',
     backgroundColor: '#FCFCFC'

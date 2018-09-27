@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import logo from './logo.png';
+import logo from './logo-full.png';
 import FormControl from "@material-ui/core/FormControl/FormControl";
 import Select from "@material-ui/core/Select/Select";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 import Button from "@material-ui/core/Button/Button";
 import {InterceptDialog} from "./components/InterceptDialog";
 import InputLabel from "@material-ui/core/InputLabel/InputLabel";
-
-// TODO: Call /settings after successful capture
-// TODO: Call DELETE /debug after closing capture dialog
-// TODO: Implement diff functionality
 
 class App extends Component {
 
@@ -54,7 +50,7 @@ class App extends Component {
         />
 
         <div style={styles.header}>
-          {/*<img alt="Tundra Server" height={ 200 } width={ 494 } src={ logo } />*/}
+          <img alt="Tundra Server" height={ 262 } width={ 571 } src={ logo } />
         </div>
         <div style={styles.menu}>
           <div style={styles.section}>
