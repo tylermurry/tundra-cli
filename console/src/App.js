@@ -47,6 +47,7 @@ class App extends Component {
           close={ this.hideInterceptDialog.bind(this) }
           debugging={ this.state.debugging }
           debugProfileName={ this.state.selectedDebugProfile }
+          callback={ this.refreshProfiles.bind(this) }
         />
 
         <div style={styles.header}>

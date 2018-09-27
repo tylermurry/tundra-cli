@@ -97,7 +97,7 @@ export class InterceptDialog extends Component {
   }
 
   render() {
-    const { open, debugging, debugProfileName } = this.props;
+    const { open, debugging, debugProfileName, callback } = this.props;
     const { intercepts, socketConnected } = this.state;
 
     return (
@@ -132,7 +132,10 @@ export class InterceptDialog extends Component {
                           style={styles.stopButton}
                           variant='contained'
                           color='primary'
-                          onClick={this.saveProfile.bind(this)}
+                          onClick={ async () => {
+                            await this.saveProfile();
+                            await callback();
+                          }}
                           disabled={this.state.profileName.length <= 0}
                         >
                           Save
