@@ -20,6 +20,7 @@
   "author": "Tyler Murry",
   "license": "MIT",
   "dependencies": {
+    "async-mkdirp": "^1.2.4",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.18.2",
     "chalk": "^2.3.2",
@@ -30,7 +31,6 @@
     "express": "^4.16.3",
     "get-port": "^4.0.0",
     "lodash": "^4.17.5",
-    "mkdirp": "^0.5.1",
     "opn": "^5.4.0",
     "path": "^0.12.7",
     "string-similarity": "^1.2.2",

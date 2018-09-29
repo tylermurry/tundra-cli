@@ -6,8 +6,8 @@ export default async (request, response) => {
   try {
     let profiles = [];
 
-    if (await fs.existsSync(PROFILE_DIRECTORY)) {
-      profiles = await fs.readdirSync(PROFILE_DIRECTORY).map(file => file.split('.').slice(0, -1).join('.'));
+    if (await fs.existsSync(PROFILE_DIRECTORY())) {
+      profiles = await fs.readdirSync(PROFILE_DIRECTORY()).map(file => file.split('.').slice(0, -1).join('.'));
     }
 
     response.status(200).send(profiles);

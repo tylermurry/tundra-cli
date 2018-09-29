@@ -24,7 +24,7 @@ exports.default = function () {
             _context.prev = 0;
             profiles = [];
             _context.next = 4;
-            return _fs2.default.existsSync(_profile.PROFILE_DIRECTORY);
+            return _fs2.default.existsSync((0, _profile.PROFILE_DIRECTORY)());
 
           case 4:
             if (!_context.sent) {
@@ -33,7 +33,7 @@ exports.default = function () {
             }
 
             _context.next = 7;
-            return _fs2.default.readdirSync(_profile.PROFILE_DIRECTORY).map(function (file) {
+            return _fs2.default.readdirSync((0, _profile.PROFILE_DIRECTORY)()).map(function (file) {
               return file.split('.').slice(0, -1).join('.');
             });
 

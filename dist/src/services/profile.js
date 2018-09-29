@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.saveRequestsAsProfile = exports.getExistingProfileRequests = exports.PROFILE_DIRECTORY = undefined;
 
-var _mkdirp = require('mkdirp');
+var _asyncMkdirp = require('async-mkdirp');
 
-var _mkdirp2 = _interopRequireDefault(_mkdirp);
+var _asyncMkdirp2 = _interopRequireDefault(_asyncMkdirp);
 
 var _fs = require('fs');
 
@@ -19,7 +19,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-var PROFILE_DIRECTORY = exports.PROFILE_DIRECTORY = process.cwd() + '/' + (0, _state.getState)().fixturesDirectory + '/profiles';
+var PROFILE_DIRECTORY = exports.PROFILE_DIRECTORY = function PROFILE_DIRECTORY() {
+  return process.cwd() + '/' + (0, _state.getState)().fixturesDirectory + '/profiles';
+};
 
 var getExistingProfileRequests = exports.getExistingProfileRequests = function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(profile) {
@@ -30,7 +32,7 @@ var getExistingProfileRequests = exports.getExistingProfileRequests = function (
             _context.prev = 0;
             _context.t0 = JSON;
             _context.next = 4;
-            return _fs2.default.readFileSync(PROFILE_DIRECTORY + '/' + profile + '.json', 'utf-8');
+            return _fs2.default.readFileSync(PROFILE_DIRECTORY() + '/' + profile + '.json', 'utf-8');
 
           case 4:
             _context.t1 = _context.sent;
@@ -60,11 +62,14 @@ var saveRequestsAsProfile = exports.saveRequestsAsProfile = function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            (0, _mkdirp2.default)(PROFILE_DIRECTORY);
-            _context2.next = 3;
-            return _fs2.default.writeFileSync(PROFILE_DIRECTORY + '/' + profile + '.json', JSON.stringify(requests, null, 2), 'utf8');
+            _context2.next = 2;
+            return (0, _asyncMkdirp2.default)(PROFILE_DIRECTORY());
 
-          case 3:
+          case 2:
+            _context2.next = 4;
+            return _fs2.default.writeFileSync(PROFILE_DIRECTORY() + '/' + profile + '.json', JSON.stringify(requests, null, 2), 'utf8');
+
+          case 4:
           case 'end':
             return _context2.stop();
         }
