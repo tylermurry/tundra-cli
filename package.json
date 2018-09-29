@@ -1,6 +1,6 @@
 {
   "name": "tundra-cli",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.2",
   "description": "Tundra is a Javascript test data management utility to help streamline http data capture for end-to-end testing. The main goal is to help applications easily implement cold storage testing",
   "main": "index.js",
   "scripts": {
