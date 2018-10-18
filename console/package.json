@@ -1,0 +1,22 @@
+{
+  "name": "tundra-console",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^3.1.0",
+    "@material-ui/icons": "^3.0.1",
+    "@material-ui/lab": "^3.0.0-alpha.16",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-gh-like-diff": "^0.0.79",
+    "react-scripts": "1.1.5",
+    "sockette": "^2.0.0",
+    "diff": "latest"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
