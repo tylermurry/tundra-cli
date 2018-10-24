@@ -13,14 +13,22 @@ var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
 
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
 var _state = require('./state');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+var PROFILES = 'profiles';
+var FIXTURES_DIRECTORY = function FIXTURES_DIRECTORY() {
+  return process.cwd() + '/' + (0, _state.getState)().fixturesDirectory;
+};
 var PROFILE_DIRECTORY = exports.PROFILE_DIRECTORY = function PROFILE_DIRECTORY() {
-  return process.cwd() + '/' + (0, _state.getState)().fixturesDirectory + '/profiles';
+  return FIXTURES_DIRECTORY() + '/' + PROFILES;
 };
 
 var getExistingProfileRequests = exports.getExistingProfileRequests = function () {
@@ -70,6 +78,10 @@ var saveRequestsAsProfile = exports.saveRequestsAsProfile = function () {
             return _fs2.default.writeFileSync(PROFILE_DIRECTORY() + '/' + profile + '.json', JSON.stringify(requests, null, 2), 'utf8');
 
           case 4:
+            _context2.next = 6;
+            return createProfileData();
+
+          case 6:
           case 'end':
             return _context2.stop();
         }
@@ -79,6 +91,58 @@ var saveRequestsAsProfile = exports.saveRequestsAsProfile = function () {
 
   return function saveRequestsAsProfile(_x2, _x3) {
     return _ref2.apply(this, arguments);
+  };
+}();
+
+var createProfileData = function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+    var profileDataFilePath, profileDataContent, files;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            profileDataFilePath = FIXTURES_DIRECTORY() + '/profileData.js';
+            _context3.prev = 1;
+            _context3.next = 4;
+            return _fs2.default.unlinkSync('' + profileDataFilePath);
+
+          case 4:
+            console.log('successfully deleted ' + profileDataFilePath);
+            _context3.next = 10;
+            break;
+
+          case 7:
+            _context3.prev = 7;
+            _context3.t0 = _context3['catch'](1);
+
+            console.log('There is no profile data yet!');
+
+          case 10:
+            profileDataContent = '';
+            _context3.next = 13;
+            return _fs2.default.readdirSync(PROFILE_DIRECTORY());
+
+          case 13:
+            files = _context3.sent;
+
+            files.forEach(function (file) {
+              var profileName = _path2.default.basename(file, '.json');
+              profileDataContent += 'export const ' + profileName.toLowerCase() + ' = () => require(\'./' + PROFILES + '/' + profileName + '\');\n\n';
+            });
+
+            _context3.next = 17;
+            return _fs2.default.writeFileSync(profileDataFilePath, profileDataContent);
+
+          case 17:
+          case 'end':
+            return _context3.stop();
+        }
+      }
+    }, _callee3, this, [[1, 7]]);
+  }));
+
+  return function createProfileData() {
+    return _ref3.apply(this, arguments);
   };
 }();
 //# sourceMappingURL=profile.js.map
