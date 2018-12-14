@@ -22,7 +22,8 @@ export const start = async (port, fixturesDirectory) => {
 
   // Middleware
   server.use(cors());
-  server.use(bodyParser.json());
+  server.use(bodyParser.json({limit: '100mb', extended: true}));
+  server.use(bodyParser.urlencoded({limit: '100mb', extended: true}));
 
   // Console
   server.use(express.static(path.join(__dirname + '../../../console/build')));
