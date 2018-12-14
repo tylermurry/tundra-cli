@@ -75,7 +75,7 @@ export default class Intercept extends Component {
               </div>
               <div style={ styles.interceptDetails }>
                 <InterceptDetails
-                  body={request.body}
+                  body={request.content}
                   headers={ request.headers }
                   title='Request'
                 />
