@@ -67,7 +67,8 @@ var start = exports.start = function () {
             // Middleware
 
             server.use((0, _cors2.default)());
-            server.use(_bodyParser2.default.json());
+            server.use(_bodyParser2.default.json({ limit: '100mb', extended: true }));
+            server.use(_bodyParser2.default.urlencoded({ limit: '100mb', extended: true }));
 
             // Console
             server.use(_express2.default.static(_path2.default.join(__dirname + '../../../console/build')));
@@ -90,10 +91,10 @@ var start = exports.start = function () {
             });
 
             // Websocket Server
-            _context.next = 15;
+            _context.next = 16;
             return Socket.init();
 
-          case 15:
+          case 16:
             socketPort = _context.sent;
 
 
@@ -105,7 +106,7 @@ var start = exports.start = function () {
             console.log('Launching console...');
             (0, _opn2.default)('http://localhost:' + port);
 
-          case 20:
+          case 21:
           case 'end':
             return _context.stop();
         }
