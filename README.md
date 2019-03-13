@@ -29,7 +29,7 @@ Choose the right adapter based on the http library you use within your applicati
 
 ### Start the Tundra Server
 
-Execute the following in a terminal at the root of your project: `tundra -d exampleProfile -f fixtures`
+Execute the following in a terminal at the root of your project: `tundra -f fixtures`
 This will start a server at `http://localhost:9091/requests` to accept requests from an adapter.
 
 | Parameter | Description |
