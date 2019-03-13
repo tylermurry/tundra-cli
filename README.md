@@ -35,7 +35,7 @@ This will start a server at `http://localhost:9091/requests` to accept requests 
 | Parameter | Description |
 | ------ | ------ |
 | -p, --port | [default: 9091] The port of the Tundra server |
-| -f, --fixtures-directory | [Optional] The directory of the `fixtures` folder in your project |
+| -f, --fixtures-directory | [Optional] The directory of the `fixtures` folder in your project, relative to the directory you are in. |
 
 ### Embed Tundra Adapter
 
